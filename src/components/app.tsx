@@ -18,6 +18,8 @@ type Props = Readonly<{
   userLogin?: string;
 }>;
 
+export let newRowAtTop: () => void = () => {};
+
 export const App = registerCustomElement(
   "app-root",
   ({ appName = "App Name", userLogin = "john.hancock@oracle.com" }: Props) => {
@@ -29,7 +31,7 @@ export const App = registerCustomElement(
 
     // const deptData = JSON.parse(_deptData);
 
-    function _newRowAtTop() {
+    newRowAtTop = () => {
       const newRow =   {
         "DepartmentId": Math.floor(Math.random() * 1000000),
         "DepartmentName": "Innovation Lab 42",
@@ -50,7 +52,7 @@ export const App = registerCustomElement(
 
     return (
       <div id="appContainer" class="oj-web-applayout-page">
-        <button onClick={_newRowAtTop}>Add a new row to the top</button>
+        {/* <button onClick={newRowAtTop}>Add a new row to the top</button> */}
         {deptData && <Table deptData={deptData} />} 
       </div>
     );

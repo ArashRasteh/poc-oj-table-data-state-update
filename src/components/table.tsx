@@ -10,7 +10,7 @@ import { ojTable } from "ojs/ojtable";
 import { ojButton, ojButtonsetOne } from "ojs/ojbutton";
 import { ojInputText } from "ojs/ojinputtext";
 import MutableArrayDataProvider = require("ojs/ojmutablearraydataprovider");
-
+import { newRowAtTop } from "./app";
 type Dept = {
   DepartmentId: number;
   DepartmentName: string;
@@ -29,8 +29,8 @@ const setColumnsDefault: TableProps["columnsDefault"] = {
   sortable: "disabled",
 };
 const setSelectionMode: TableProps["selectionMode"] = {
-  row: "multiple",
-  column: "multiple",
+  row: "none",
+  column: "none",
 };
 const setScrollPolicy: TableProps["scrollPolicyOptions"] = {
   fetchSize: 10,
@@ -45,6 +45,7 @@ const columnsDef: TableProps["columns"] = [
     className: "oj-sm-only-hide",
     resizable: "enabled",
     sortable: "enabled",
+    template: "deptIdTemplate",
   },
   {
     headerText: "Department Name",
@@ -58,8 +59,9 @@ const columnsDef: TableProps["columns"] = [
     headerClassName: "oj-sm-only-hide",
     className: "oj-sm-only-hide",
     resizable: "enabled",
+    template: "locationIdTemplate",
   },
-  { headerText: "Manager Id", field: "ManagerId", resizable: "enabled" },
+  { headerText: "Manager Id", field: "ManagerId", resizable: "enabled", template: "manageIdTemplate" },
   { headerText: "Action", resizable: "disabled", template: "actionTemplate" },
 ];
 
@@ -77,6 +79,8 @@ const Table = ({
   setDeptData,
 }: TableCompProps) => {
   const [deptName, setDeptName] = useState<Dept["DepartmentName"]>();
+  const [locationId, setLocationId] = useState<Dept["LocationId"]>();
+  const [managerId, setManagerId] = useState<Dept["ManagerId"]>();
   const [editRow, setEditRow] = useState<Row>();
   const cancelEdit = useRef(false);
 
@@ -87,7 +91,7 @@ const Table = ({
       keyAttributes: "DepartmentId",
       implicitSort: [{ attribute: "DepartmentId", direction: "ascending" }],
     });
-  }, []);
+  }, [deptData]);
 
   const submitRow = (key: Dept["DepartmentId"]) => {
     let tempArray = [];
@@ -95,6 +99,8 @@ const Table = ({
       if (element.DepartmentId === key) {
         console.log(element);
         element.DepartmentName = deptName;
+        element.LocationId = locationId;
+        element.ManagerId = managerId;
       }
       tempArray.push(element);
     }
@@ -106,6 +112,8 @@ const Table = ({
   ) => {
     const rowContext = event.detail.rowContext;
     setDeptName(rowContext.item.data.DepartmentName);
+    setLocationId(rowContext.item.data.LocationId);
+    setManagerId(rowContext.item.data.ManagerId);
   };
   const beforeRowEditEndListener = (
     event: ojTable.ojBeforeRowEditEnd<Dept["DepartmentId"], Dept>
@@ -118,7 +126,22 @@ const Table = ({
 
   const updateDeptName = (event: ojInputText.valueChanged) => {
     if (event.detail.updatedFrom === "internal") {
-      setDeptName(event.detail.value);
+      newRowAtTop();
+      if (setDeptData) {
+        setDeptData({...deptData});
+      }
+    }
+  };
+
+  const updateLocationId = (event: ojInputText.valueChanged) => {
+    if (event.detail.updatedFrom === "internal") {
+      setLocationId(event.detail.value);
+    }
+  };
+
+  const updateManagerId = (event: ojInputText.valueChanged) => {
+    if (event.detail.updatedFrom === "internal") {
+      setManagerId(event.detail.value);
     }
   };
 
@@ -137,6 +160,24 @@ const Table = ({
         )}
       </>
     );
+  };
+
+  const locationIdTemplate = (
+    cell: ojTable.CellTemplateContext<Dept["DepartmentId"], Dept>
+  ) => {
+    if (cell.mode == "navigation") {
+      return cell.data;
+    }
+    return <oj-input-text id="it1" value={locationId} class="editable" onvalueChanged={updateLocationId}></oj-input-text>;
+  };
+
+  const managerIdTemplate = (
+    cell: ojTable.CellTemplateContext<Dept["DepartmentId"], Dept>
+  ) => {
+    if (cell.mode == "navigation") {
+      return cell.data;
+    }
+    return <oj-input-text id="it1" value={managerId} class="editable" onvalueChanged={updateManagerId}></oj-input-text>;
   };
 
   const actionColumn = (
@@ -210,6 +251,8 @@ const Table = ({
         class="table-sizing">
         <template slot="actionTemplate" render={actionColumn}></template>
         <template slot="deptNameTemplate" render={editableTemplate}></template>
+        <template slot="locationIdTemplate" render={locationIdTemplate}></template>
+        <template slot="manageIdTemplate" render={managerIdTemplate}></template>
       </oj-table>
     </div>
   );
