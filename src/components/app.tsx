@@ -31,7 +31,7 @@ export const App = registerCustomElement(
 
     function _newRowAtTop() {
       const newRow =   {
-        "DepartmentId": 501,
+        "DepartmentId": Math.floor(Math.random() * 1000000),
         "DepartmentName": "Innovation Lab 42",
         "LocationId": 250,
         "ManagerId": 3002,

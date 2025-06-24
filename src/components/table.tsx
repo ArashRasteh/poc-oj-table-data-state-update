@@ -1,5 +1,5 @@
 import { h, ComponentProps } from "preact";
-import { useState, useRef } from "preact/hooks";
+import { useState, useRef, useMemo } from "preact/hooks";
 import "ojs/ojbutton";
 import "ojs/ojtable";
 import "ojs/ojmenu";
@@ -82,11 +82,12 @@ const Table = ({
 
   
 
-const dataprovider: MutableArrayDataProvider<Dept["DepartmentId"], Dept> =
-new MutableArrayDataProvider(deptData, {
-  keyAttributes: "DepartmentId",
-  implicitSort: [{ attribute: "DepartmentId", direction: "ascending" }],
-});
+  const dataprovider: MutableArrayDataProvider<Dept["DepartmentId"], Dept> = useMemo(() => {
+    return new MutableArrayDataProvider(deptData, {
+      keyAttributes: "DepartmentId",
+      implicitSort: [{ attribute: "DepartmentId", direction: "ascending" }],
+    });
+  }, []);
 
   const submitRow = (key: Dept["DepartmentId"]) => {
     let tempArray = [];
