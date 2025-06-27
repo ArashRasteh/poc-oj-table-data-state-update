@@ -29,6 +29,7 @@ export const App = registerCustomElement(
 
     const [deptData, setDeptData] = useState<any[]>(JSON.parse(_deptData));
     const [totalManagerId, setTotalManagerId] = useState(0);
+    const [count, setCount] = useState(0);
 
     // const deptData = JSON.parse(_deptData);
 
@@ -68,6 +69,13 @@ export const App = registerCustomElement(
         {/* <button onClick={newRowAtTop}>Add a new row to the top</button> */}
         {deptData && <Table deptData={deptData} setDeptData={setDeptData} />} 
         <p>Total Manager Id: {totalManagerId}</p>
+        <button onClick={() => {
+          const newDeptData = deptData.map((dept) => ({
+            ...dept,
+            ManagerId: Number(dept.ManagerId) + 1
+          }));
+          setDeptData(newDeptData);
+        }}>Add One to all Manager Ids</button>
       </div>
     );
   }
