@@ -10,7 +10,7 @@ import { ojTable } from "ojs/ojtable";
 import { ojButton, ojButtonsetOne } from "ojs/ojbutton";
 import { ojInputText } from "ojs/ojinputtext";
 import MutableArrayDataProvider = require("ojs/ojmutablearraydataprovider");
-import { newRowAtTop } from "./app";
+import { dataWasChanged } from "./app";
 type Dept = {
   DepartmentId: number;
   DepartmentName: string;
@@ -144,7 +144,7 @@ const Table = ({
     if (event.detail.updatedFrom === "internal") {
       setManagerId(event.detail.value);
     }
-    setDeptData([...deptData]);
+    dataWasChanged();
   };
 
   const editableTemplate = (

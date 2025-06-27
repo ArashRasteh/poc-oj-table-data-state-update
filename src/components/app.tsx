@@ -18,8 +18,7 @@ type Props = Readonly<{
   userLogin?: string;
 }>;
 
-export let newRowAtTop: () => void = () => {};
-export let recalculateTotalManagerId: () => void = () => {};
+export let dataWasChanged: () => void = () => {};
 
 export const App = registerCustomElement(
   "app-root",
@@ -33,7 +32,7 @@ export const App = registerCustomElement(
 
     // const deptData = JSON.parse(_deptData);
 
-    newRowAtTop = () => {
+    dataWasChanged = () => {
       // const newRow =   {
       //   "DepartmentId": Math.floor(Math.random() * 1000000),
       //   "DepartmentName": "Innovation Lab 42",
@@ -54,12 +53,11 @@ export const App = registerCustomElement(
 
     useEffect(() => {
       if (deptData) {
-        console.log("deptData", deptData);
         recalculateTotalManagerId();
       }
     }, [deptData]);
 
-    recalculateTotalManagerId = () => {
+    const recalculateTotalManagerId = () => {
       const total = deptData.reduce((acc: number, curr: any) => acc + Number(curr.ManagerId), 0);
       console.log("new total", total);
       setTotalManagerId(total);
