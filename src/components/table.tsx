@@ -71,12 +71,12 @@ const menuListener = (event: ojMenu.ojMenuAction) => {
 
 type TableCompProps = {
   deptData: any;
-  setDeptData?: (data: Dept[]) => void;
+  setDeptData: (data: Dept[]) => void;
 }
 
 const Table = ({
   deptData,
-  setDeptData,
+  setDeptData
 }: TableCompProps) => {
   const [deptName, setDeptName] = useState<Dept["DepartmentName"]>();
   const [locationId, setLocationId] = useState<Dept["LocationId"]>();
@@ -126,10 +126,11 @@ const Table = ({
 
   const updateDeptName = (event: ojInputText.valueChanged) => {
     if (event.detail.updatedFrom === "internal") {
-      newRowAtTop();
-      if (setDeptData) {
-        setDeptData({...deptData});
-      }
+      // newRowAtTop();
+      // if (setDeptData) {
+      //   setDeptData([...deptData]);
+      // }
+      setDeptName(event.detail.value);
     }
   };
 
@@ -143,6 +144,7 @@ const Table = ({
     if (event.detail.updatedFrom === "internal") {
       setManagerId(event.detail.value);
     }
+    setDeptData([...deptData]);
   };
 
   const editableTemplate = (
